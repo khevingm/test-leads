@@ -26,8 +26,9 @@ app.get("/webhook", (req, res) => {
 
 // POST para recibir leads
 app.post("/webhook", async (req, res) => {
+  res.sendStatus(200);
   console.log("🔍 [POST] Recibiendo Webhook", req.body);
-
+  
   try {
     const body = req.body;
     console.log("📦 Payload:", JSON.stringify(body, null, 2));
@@ -68,7 +69,6 @@ app.post("/webhook", async (req, res) => {
         console.error("Error:", err)
       );
     }
-    res.sendStatus(200);
   } catch (err) {
     console.error("🛑 Error al procesar el webhook:", err);
     res.sendStatus(500);
