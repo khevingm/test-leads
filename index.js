@@ -48,6 +48,7 @@ app.post("/webhook", async (req, res) => {
     console.log("🔗 URL para obtener datos del lead:", url);
 
     const response = await axios.get(url);
+    console.log("📥 Respuesta de Meta:", response.data);
     const fieldData = response.data?.field_data;
     console.log("📋 Datos obtenidos desde Meta:", fieldData);
     let nombre = "", correo = "";
