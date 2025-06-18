@@ -1,3 +1,4 @@
+const axios = require("axios");
 const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
@@ -42,13 +43,23 @@ app.post("/webhook", async (req, res) => {
 
     const lead = req.body.entry?.[0]?.changes?.[0]?.value;
     console.log("📋 Lead recibido:", lead);
+
+    const url = `https://graph.facebook.com/v23.0/${lead.form_id}/leads?access_token=${process.env.META_ACCESS_TOKEN}`;
+
+    const response = await axios.get(url);
+    const fieldData = response.data?.field_data;
+    console.log("📋 Datos obtenidos desde Meta:", fieldData);
+    let nombre = "", correo = "";
+    fieldData.forEach((field) => {
+      if (field.name === "nombre_completo") {
+        nombre = field.values?.[0] || "";
+      }
+      if (field.name === "correo_electrónico") {
+        correo = field.values?.[0] || "";
+      }
+    });
     if (lead) {
-      await agregarALaHoja([
-        lead.leadgen_id,
-        lead.form_id,
-        lead.created_time,
-        lead.page_id,
-      ]).catch((err) => console.error("Error:", err));
+      await agregarALaHoja([nombre, correo]).catch((err) => console.error("Error:", err));
     }
     res.sendStatus(200);
   } catch (err) {
