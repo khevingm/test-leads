@@ -49,9 +49,11 @@ app.post("/webhook", async (req, res) => {
 
     const response = await axios.get(url);
     console.log("📥 Respuesta de Meta:", response.data);
-    const fieldData = response.data?.data.field_data;
+    const fieldData = response.data?.data?.[0]?.field_data || [];
     console.log("📋 Datos obtenidos desde Meta:", fieldData);
-    let nombre = "", correo = "";
+    let nombre = "",
+      correo = "";
+
     fieldData.forEach((field) => {
       if (field.name === "nombre_completo") {
         nombre = field.values?.[0] || "";
@@ -60,8 +62,11 @@ app.post("/webhook", async (req, res) => {
         correo = field.values?.[0] || "";
       }
     });
+
     if (lead) {
-      await agregarALaHoja([nombre, correo]).catch((err) => console.error("Error:", err));
+      await agregarALaHoja([nombre, correo]).catch((err) =>
+        console.error("Error:", err)
+      );
     }
     res.sendStatus(200);
   } catch (err) {
