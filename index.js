@@ -49,7 +49,7 @@ app.post("/webhook", async (req, res) => {
 
     const response = await axios.get(url);
     console.log("📥 Respuesta de Meta:", response.data);
-    const fieldData = response.data?.field_data;
+    const fieldData = response.data?.data.field_data;
     console.log("📋 Datos obtenidos desde Meta:", fieldData);
     let nombre = "", correo = "";
     fieldData.forEach((field) => {
