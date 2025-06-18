@@ -45,6 +45,7 @@ app.post("/webhook", async (req, res) => {
     console.log("📋 Lead recibido:", lead);
 
     const url = `https://graph.facebook.com/v23.0/${lead.form_id}/leads?access_token=${process.env.META_ACCESS_TOKEN}`;
+    console.log("🔗 URL para obtener datos del lead:", url);
 
     const response = await axios.get(url);
     const fieldData = response.data?.field_data;
