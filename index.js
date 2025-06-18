@@ -1,29 +1,13 @@
-// require("dotenv").config();
 const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
-// const xhub = require("express-x-hub");
 const { google } = require("googleapis");
-
-console.log(process.env.GOOGLE_PRIVATE_KEY); // No debería ser undefined
-
-const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n");
-
-
 
 app.set("port", process.env.PORT || 3000);
 app.listen(app.get("port"));
-
-// app.use(xhub({ algorithm: "sha1", secret: process.env.APP_SECRET }));
 app.use(bodyParser.json());
 
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "token";
-const received_updates = [];
-
-app.get("/", function (req, res) {
-  console.log(req);
-  res.send("<pre>" + JSON.stringify(received_updates, null, 2) + "</pre>");
-});
 
 // GET para verificación
 app.get("/webhook", (req, res) => {
@@ -64,7 +48,7 @@ app.post("/webhook", async (req, res) => {
         lead.form_id,
         lead.created_time,
         lead.page_id,
-      ]);
+      ]).catch((err) => console.error("Error:", err));
     }
     res.sendStatus(200);
   } catch (err) {
